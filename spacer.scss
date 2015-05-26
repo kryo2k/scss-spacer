@@ -1,0 +1,12 @@
+//
+// scss spacing framework
+// @author Hans Doller <kryo2k@gmail.com>
+// @website https://github.com/kryo2k/scss-spacer
+//
+
+@import '_vars.scss';
+@import '_functions.scss';
+@import '_mixins.scss';
+
+@include spacing-cls( $spacer-unit-base, $property: 'margin' );
+@include spacing-cls( $spacer-unit-base, $property: 'padding' );

@@ -1,0 +1,15 @@
+//
+// scss spacing framework
+// @author Hans Doller <kryo2k@gmail.com>
+// @website https://github.com/kryo2k/scss-spacer
+//
+
+@function unit-multiplier($unit, $mul: 0) {
+  @if unitless($unit) == true {
+    @error 'Unit to multiply (#{$unit}) must have any units attached.';
+  }
+  @elseif unitless($mul) == false {
+    @error 'Multiplier (#{$mul}) must not have any units attached (#{unit($mul)}).';
+  }
+  @return $unit * $mul;
+}

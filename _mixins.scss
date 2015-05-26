@@ -1,0 +1,58 @@
+//
+// scss spacing framework
+// @author Hans Doller <kryo2k@gmail.com>
+// @website https://github.com/kryo2k/scss-spacer
+//
+
+@mixin prop-edges-val($val, $base-property,
+  $top: 'top', $suffix-top: '-top',
+  $left: 'left', $suffix-left: '-left',
+  $right: 'right', $suffix-right: '-right',
+  $bottom: 'bottom', $suffix-bottom: '-bottom') {
+  &.#{$top}    { #{$base-property + $suffix-top}: $val; }
+  &.#{$left}   { #{$base-property + $suffix-left}: $val; }
+  &.#{$right}  { #{$base-property + $suffix-right}: $val; }
+  &.#{$bottom} { #{$base-property + $suffix-bottom}: $val; }
+}
+
+@mixin prop-unit-mul($unit, $mul: 0, $property: 'margin') {
+  #{$property}: unit-multiplier($unit, $mul);
+}
+
+@mixin prop-edges-unit-mul($unit, $mul, $base-property,
+  $top: 'top', $suffix-top: '-top',
+  $left: 'left', $suffix-left: '-left',
+  $right: 'right', $suffix-right: '-right',
+  $bottom: 'bottom', $suffix-bottom: '-bottom') {
+
+  @include prop-edges-val(
+    unit-multiplier($unit, $mul),     $base-property,
+    $top:    $top,    $suffix-top:    $suffix-top,
+    $left:   $left,   $suffix-left:   $suffix-left,
+    $right:  $right,  $suffix-right:  $suffix-right,
+    $bottom: $bottom, $suffix-bottom: $suffix-bottom
+  );
+}
+
+@mixin spacing-cls($base-unit: $spacer-unit-base, $variations: $spacer-unit-variations, $property: 'margin', $cls: null) {
+  @if type-of($cls) != 'string' {
+    $cls: $property;
+  }
+  @if type-of($variations) != 'number' or unitless($variations) == false or $variations < 1 {
+    @error 'Invalid value for variations was provided (#{$variations}). Must be a unitless number greater than 0.';
+  }
+  .#{$cls} {
+    @for $i from 0 through $variations {
+      @if $i == 1 {
+        @include prop-edges-unit-mul($base-unit, $i, $property);
+        &.all { @include prop-unit-mul($base-unit, $i, $property); }
+      }
+      @include prop-edges-unit-mul($base-unit, $i, $property, $top: 'top-#{$i}', $left: 'left-#{$i}', $right: 'right-#{$i}', $bottom: 'bottom-#{$i}');
+      &.all-#{$i} { @include prop-unit-mul($base-unit, $i, $property); }
+    }
+
+    @include prop-edges-unit-mul($base-unit, 0, $property, $top: 'none-top', $left: 'none-left', $right: 'none-right', $bottom: 'none-bottom');
+    @include prop-edges-val(auto, $property, $top: 'auto-top', $left: 'auto-left', $right: 'auto-right', $bottom: 'auto-bottom');
+    &.auto { #{$property}: auto; }
+  }
+}
